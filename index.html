@@ -18,3 +18,32 @@
   <div id="root"></div>
 </body>
 </html>
+<script>
+(function () {
+  const host = "https://kairu2018.github.io";
+  const base = "/rada-creative-connect";
+
+  function fixLinks() {
+    document.querySelectorAll("a[href]").forEach(function (link) {
+      try {
+        const url = new URL(link.getAttribute("href"), window.location.href);
+        if (url.origin === host &&
+            !url.pathname.startsWith(base + "/") &&
+            url.pathname !== base) {
+          link.setAttribute("href",
+            base + (url.pathname === "/" ? "/" : url.pathname) +
+            url.search + url.hash
+          );
+        }
+      } catch (error) {}
+    });
+  }
+
+  fixLinks();
+  new MutationObserver(fixLinks).observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
+  document.addEventListener("click", fixLinks, true);
+})();
+</script>
